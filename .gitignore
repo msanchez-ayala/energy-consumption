@@ -130,3 +130,7 @@ dmypy.json
 
 # Config files and secret keys
 *config.py
+
+# Data files
+SEDS.txt
+cleanfile.json
