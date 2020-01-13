@@ -1,6 +1,7 @@
 import requests
 import time
 from bs4 import BeautifulSoup as BS
+import numpy as np
 
 def get_page(url,headers):
     """
@@ -29,26 +30,36 @@ def get_page(url,headers):
     
     return  soup
 
-def all_pages(genre, headers,no_results):
+def get_station_weather(station,start_date,end_date):
     """
-    Runs get_page(url, headers) multiple times.
-    Param genre: [str] genre to search on from IMDB advanced search.
-    Param headers: [str] headers to pass into requests.get so that IMDB knows we are not russian hackers.
-    Param no_results: [int] number of results we want to obtain.
+    Returns: A parsed json of the weather data for the given station from 1960 - 2018.
+    
+    Param station: [str] A station code from the list of stations
+    Param start_date: [str] Start date of the query. In the form 'YYYY-MM-DD'
+    Param end_date: [str] End date of the query. In the form 'YYYY-MM-DD'
     """
-    base_url = f'https://www.imdb.com/search/title/?title_type=feature,tv_movie&genres={genre}&'
-    suffix = 'view=advanced'
-    cur = 1
-    results = []
-    while cur < no_results:
-        if cur == 1:
-            results.extend(get_page(base_url, headers))
-        elif cur > 1:
-            suffix = 'start={}&ref_=adv_nxt'.format(cur)
-            results.extend(get_page(base_url + suffix, headers))
-        time.sleep(0.5)
-        cur += 50
-    return results
 
+    base_url = 'https://www.ncei.noaa.gov/access/services/data/v1'
 
+    params = {'dataset': 'daily-summaries',   # the dataset to query for data
+              'stations': station,            # comma separated list of station identifiers for selection and subsetting
+              'startDate': start_date,        # YYYY-MM-DD
+              'endDate' : end_date,           # YYYY-MM-DD
+              'format' : 'json',              # json is ideal formal    
+              'includeStationName' : 'True',  # Just to be sure we're looking at the right city/state
+              'units' : 'standard',           # degrees fahrenheit
+             }        
 
+    return requests.get(base_url, params = params).json()
+
+def get_matrix(temp_data):
+    """
+    Returns a 2-D matrix outlining how many days in a given year had temperatures above or below certain values Farenheit.
+    [[above_100  above_95  above_90  above_85  above_80  above_75  above_70], 
+     [below_70 below_65 below_60 below_55 below_50 below_below_45 below_40 
+      below_35 below_30 below_25 below_20 below_15 below_10 below_5]]
+     
+    Param temp_data: [list] All of the TMAXs for a given day
+    """
+    
+   
