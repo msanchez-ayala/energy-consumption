@@ -150,6 +150,7 @@ def create_energy_columns(df):
     # Create columns
     df['Renewable Sources'] = df[renewable_in_df].sum(axis=1)
     df['Nonrenewable Sources'] = df[nonrenewable_in_df].sum(axis=1)
+    df['Difference'] = df['Nonrenewable'] - df['Renewable']
     
     return df
 
