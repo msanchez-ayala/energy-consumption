@@ -153,17 +153,15 @@ def create_energy_columns(df):
     
     return df
 
-def get_weather_df(weather_data):
+def get_weather_df(state_data):
     """
     Return a dataframe with datetime index and columns for each temperature designation
     
-    Param weather_data: [dict] Dict taken directly from mongo containing weather data
+    Param weather_data: [dict] Full state-level data
     """
-    
-    # Create container for massaging data into a 2-D matrix
-    matrix = []
-    data = weather_data['data']
-    
+    for series in state_data:
+        if series.get('description') == 'Temperature':
+            data = series['data']
                            
     # Array for dates, which will be the index
     dates = np.arange(1960,2018,1)
@@ -178,12 +176,12 @@ def get_weather_df(weather_data):
     # Set index
     df.set_index('Date', inplace=True)
     
-    for year in data:
-        
-        # Combine both lists into a single row and append to the matrix
-        row = data[year][0] + data[year][1]
-        matrix.append(row)
-                           
+    # Add each row of data to a matrix
+    
+
+    matrix = [data[year][0] for year in data]
+
+                       
     # Limit to only 2017 because some missing 2018 energy data
     matrix = matrix[:-1]
     
@@ -193,8 +191,10 @@ def get_weather_df(weather_data):
 
     below_temps = np.arange(70, 0, -5)
     below_temps = ['days_below_'+str(temp) for temp in below_temps]
+    
+    descriptive_stats = ['Max Temp', 'Min Temp', 'Mean Temp', 'Std Temp'] 
 
-    temp_column_titles = above_temps + below_temps
+    temp_column_titles = above_temps + below_temps + descriptive_stats
     
     df = pd.DataFrame(matrix, columns = temp_column_titles, index = df.index)
         
