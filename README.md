@@ -35,6 +35,8 @@ has been identified, the user can scroll down the page to view a breakdown of
 any state's renewable and nonrenewable energy consumption by either sector or
 fuel type.
 
+![animation](screenshots/animation.gif)
+
 ### Future Directions
 
 Currently, the Sustainability Index does not account for state population.
