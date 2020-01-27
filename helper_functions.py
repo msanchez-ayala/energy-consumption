@@ -458,7 +458,7 @@ def get_sustainability_df():
         column_name = f'SI_{number}'
 
         # Define SI = weight * Effort Score + (1 - weight) * Green Score
-        si = (number * sus_df['Effort Score']) + ((round(1 - number,1)) * sus_df['Green Score'])
+        si = ((number * sus_df['Effort Score']) + ((round(1 - number,1)) * sus_df['Green Score']))/2
 
         # Scale between 0-1 and round
         si_scaled = MinMaxScaler().fit_transform(np.array(si).reshape(-1, 1)).flatten()
