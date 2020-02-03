@@ -270,34 +270,6 @@ def get_weather_df(state_data):
 
     return df
 
-def plot_descriptive_fig(df, columns, state, sector):
-    """
-    Returns
-    --------
-
-        Interactive plotly line plot for the given dataframe and columns.
-
-        First need to melt the df and then create the plotly figure.
-
-    Param df: dataframe we want to use. Index must be dates.
-    Param columns: [list] Columns we want to include in the graph.
-    Param title: [str] title for graph
-    """
-    df_melt = df[columns].reset_index().melt(id_vars='Date',
-                                value_vars=columns,
-                                var_name = 'Energy Source',
-                                value_name = 'Energy Consumed (Billion Btu)')
-    df_melt.columns = ['Year', 'Energy Source', 'Energy Consumed (Billion Btu)']
-
-    fig = px.line(df_melt,
-              x = 'Year',
-              y = 'Energy Consumed (Billion Btu)',
-              color = 'Energy Source',
-              title = f'{state} Energy Consumption - {sector}',
-              height = 600,
-              width = 1100)
-
-    fig.show()
 
 def get_states_data():
     """
