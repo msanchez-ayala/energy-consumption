@@ -11,13 +11,15 @@ import pymongo
 import helper_functions
 import re
 import csv
+import pickle
 
 state_abbrevs = open('state-abbreviations.csv')
 state_abbrevs_reader = csv.reader(state_abbrevs)
 state_abbrevs_dict = dict(state_abbrevs_reader)
 
 # Load sustainability df
-states_data = helper_functions.get_states_data()
+with open('cleaned_data/state_dfs.pickle', 'rb') as f:
+    states_data = pickle.load(f)
 
 # Store names of all possible sectors
 sectors = states_data['Alabama'].keys()
